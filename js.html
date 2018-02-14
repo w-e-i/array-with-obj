@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <ul id="ul"></ul>
+  <ol id="ol"></ol>
+  <script>
+    window.onload = function() {
+      let array = [
+        {
+          name: '360',
+          child: [
+            {
+              name: 'ddc',
+              child: [
+                {
+                  name: '萧敬腾',
+                  child: [
+                    {
+                      name: '梁启发',
+                      child: [
+                        {
+                          name: '澳门',
+                        }
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: '老板',
+                  child: [
+                    {
+                      name: '剑来',
+                    },
+                  ],
+                }
+              ],
+            },
+            {
+              name: '包子',
+              child: [
+                {
+                  name: '卡卡西',
+                },
+              ],
+            }
+          ],
+        },
+        {
+          name: '腾讯',
+          child: [
+            {
+              name: '马化腾',
+              child: [
+                {
+                  name: 'qq',
+                },
+              ],
+            },
+            {
+              name: '张小龙',
+              child: [
+                {
+                  name: '微信',
+                },
+              ],
+            }
+          ],
+        },
+        {
+          name: '阿里巴巴',
+          child: [
+            {
+              name: '马云',
+              child: [
+                {
+                  name: '淘宝',
+                  child: [
+                    {
+                      name: '余额宝',
+                      child: [
+                        {
+                          name: '投资型基金',
+                        },
+                        {
+                          name: '保本型基金',
+                        }
+                      ],
+                    },
+                    {
+                      name: '信用分',
+                      child: [
+                        {
+                          name: 'ofo免押金',
+                        },
+                        {
+                          name: '租房免押金',
+                          child: [
+                            {
+                              name: '北京',
+                            },
+                            {
+                              name: '上海',
+                            },
+                            {
+                              name: '广州',
+                            },
+                            {
+                              name: '深圳',
+                            },
+                          ],
+                        }
+                      ],
+                    }
+                  ],
+                },
+              ],
+            },
+            {
+              name: '叶蓓',
+              child: [
+                {
+                  name: '支付宝',
+                  child: [
+                    {
+                      name: '余额宝',
+                      child: [
+                        {
+                          name: '投资型基金',
+                        },
+                        {
+                          name: '保本型基金',
+                        }
+                      ],
+                    },
+                    {
+                      name: '信用分',
+                      child: [
+                        {
+                          name: 'ofo免押金',
+                        },
+                        {
+                          name: '租房免押金',
+                          child: [
+                            {
+                              name: '北京',
+                            },
+                            {
+                              name: '上海',
+                            },
+                            {
+                              name: '广州',
+                            },
+                            {
+                              name: '深圳',
+                            },
+                          ],
+                        }
+                      ],
+                    }
+                  ],
+                },
+              ],
+            }
+          ],
+        },
+      ];
+      let arr = [];
+      let s = [];
+      let k = [];
+
+      const flatten = (item, parentName) => {
+        return item.forEach((val) => {
+          if (val.child) {
+            arr.push({name: val.name, parent: parentName});
+            flatten(val.child, val.name);
+          } else {
+            arr.push({name: val.name, parent: parentName});
+          }
+        })
+      };
+      flatten(array, 'firstClass');
+
+      let test = (val) => {
+        let result = val.reduce((acc, cur, index, ar) => {
+          if (acc.name) {
+            if (acc.name === cur.parent) {
+              if (acc.mixed) {
+                if (acc.parent === 'firstClass') {
+                  s.push(acc.mixed);
+                  acc.mixed = [];
+                } else if (acc.mixed[acc.mixed.length - 2] === cur.parent) {
+                  let mixing = acc.mixed.filter((qw, qe) => qe < acc.mixed.length -1).concat(cur.name);
+                  s.push(acc.mixed);
+                  if (ar[index+1] === undefined) {
+                    s.push(mixing);
+                    return;
+                  }
+                  return Object.assign({}, acc, {mixed: mixing});
+                }
+                return Object.assign({}, acc, {mixed: acc.mixed.concat([acc.name, cur.name])});
+              } else {
+                return Object.assign({}, acc, {mixed: [acc.name, cur.name]});
+              }
+            } else if (acc.mixed[acc.mixed.length - 1] === cur.parent) {
+              if (ar[index+1] === undefined) {
+                s.push([...acc.mixed, cur.name]);
+                return;
+              }
+              return Object.assign({}, acc, {mixed: [...acc.mixed, cur.name]});
+            } else {
+              let ak = ar.filter((i, ind) => ind >= index);
+              s.push(acc.mixed);
+              s.filter((item) => {
+                ak.forEach((data, dIndex) => {
+                  return item.indexOf(data.parent) > -1;
+                })
+              })
+              s.forEach((item) => {
+                if (item.indexOf(ak[0].parent) > -1) {
+                  ak.unshift({
+                    name: ak[0].parent,
+                    mixed: item.filter((ad, as) => as <= item.indexOf(ak[0].parent) -1),
+                  })
+                }
+              });
+              test(ak);
+              return false;
+            }
+          } else {
+            return false;
+          }
+        });
+        return false;
+      }
+
+      // arr.reduce((acc, cur, index, ar) => {
+      //   console.log(acc);
+      //   if (acc.name) {
+      //     if (acc.name === cur.parent) {
+      //       return Object.assign({}, acc, {mixed: [acc.name, cur.name]});
+      //     } else if (acc.mixed[acc.mixed.length - 1] === cur.parent) {
+      //       return Object.assign({}, acc, {mixed: [...acc.mixed, cur.name]})
+      //     } else {
+      //       ar.splice(index, index + 1).reduce
+      //     }
+      //   }
+      // });
+
+      test(arr);
+      console.log(s);
+      // const linkRecurse = (val, sk) => {
+      //   return val.forEach((item, index, ar) => {
+      //     if (sk) {
+      //       let sd = sk.split('-');
+      //       if (sd[sd.length - 1] === item.parent) {
+      //         let dd = sk + '-' + item.name;
+      //         console.log(dd);
+      //         linkRecurse(val, dd);
+      //       } else {
+      //         s.push(sk);
+      //       }
+      //     } else if (index <= ar.length -2 && item.name === ar[index + 1].parent) {
+      //       let str = item.name + '-' + ar[index + 1].name;
+      //       linkRecurse(val, str);
+      //     }
+      //   });
+      // };
+      // linkRecurse(arr);
+      // console.log(s);
+      //
+      //
+      //
+      //
+      // const link = (val) => {
+      //   val.forEach((item, index, ar) => {
+      //     if (index <= ar.length -2 && item.name === ar[index + 1].parent) {
+      //       s.push(item.name + '-' + ar[index + 1].name)
+      //     }
+      //   })
+      // };
+      // link(arr);
+      // console.log(s);
+      // const recurse = (val) => {
+      //   val.forEach((item, index, ar) => {
+      //     console.log(item, ar[index + 1]);
+      //     if (index <= ar.length -2 && item.split('-')[1] === ar[index + 1].split('-')[0]) {
+      //       k.push(item + '-' + ar[index + 1].split('-')[1]);
+      //     }
+      //   })
+      // };
+      // recurse(s);
+      // console.log(k);
+      // for (let i = 0;i<arr.length;i++) {
+      //   for (let j = 0;j<arr.length;j++) {
+      //     if (arr[i].name === arr[j].parent) {
+      //       s.push(arr[i].name + '-' +arr[j].name);
+      //     }
+      //   }
+      // }
+      // console.log(s);
+      // s.forEach((c) => {
+      //   s.forEach((d) => {
+      //     if (c.split('-')[1] === d.split('-')[0]) {
+      //       k.push(c + '-' + d.split('-')[1]);
+      //     }
+      //   })
+      // })
+      // console.log(k);
+      // let t = [...k];
+      // k.forEach((e, index) => {
+      //   k.forEach((f, ind) => {
+      //     if (e.split('-')[1] === f.split('-')[0] && e.split('-')[2] === f.split('-')[1]) {
+      //       t.splice(index, 1, e + '-' + f.split('-')[2]);
+      //       t.splice(ind, 1);
+      //     }
+      //   })
+      // })
+      // console.log(t);
+    }
+  </script>
+</body>
+</html>
+
