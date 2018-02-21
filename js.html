@@ -170,7 +170,6 @@
       ];
       let arr = [];
       let s = [];
-      let k = [];
 
       const flatten = (item, parentName) => {
         return item.forEach((val) => {
@@ -212,114 +211,33 @@
               }
               return Object.assign({}, acc, {mixed: [...acc.mixed, cur.name]});
             } else {
-              let ak = ar.filter((i, ind) => ind >= index);
+              let k = ar.filter((i, ind) => ind >= index);
               s.push(acc.mixed);
               s.filter((item) => {
-                ak.forEach((data, dIndex) => {
+                k.forEach((data, dIndex) => {
                   return item.indexOf(data.parent) > -1;
                 })
               })
               s.forEach((item) => {
-                if (item.indexOf(ak[0].parent) > -1) {
-                  ak.unshift({
-                    name: ak[0].parent,
-                    mixed: item.filter((ad, as) => as <= item.indexOf(ak[0].parent) -1),
+                if (item.indexOf(k[0].parent) > -1) {
+                  k.unshift({
+                    name: k[0].parent,
+                    mixed: item.filter((ad, as) => as <= item.indexOf(k[0].parent) -1),
                   })
                 }
               });
-              test(ak);
+              test(k);
               return false;
             }
           } else {
             return false;
           }
         });
-        return false;
+        return s;
       }
 
-      // arr.reduce((acc, cur, index, ar) => {
-      //   console.log(acc);
-      //   if (acc.name) {
-      //     if (acc.name === cur.parent) {
-      //       return Object.assign({}, acc, {mixed: [acc.name, cur.name]});
-      //     } else if (acc.mixed[acc.mixed.length - 1] === cur.parent) {
-      //       return Object.assign({}, acc, {mixed: [...acc.mixed, cur.name]})
-      //     } else {
-      //       ar.splice(index, index + 1).reduce
-      //     }
-      //   }
-      // });
-
-      test(arr);
-      console.log(s);
-      // const linkRecurse = (val, sk) => {
-      //   return val.forEach((item, index, ar) => {
-      //     if (sk) {
-      //       let sd = sk.split('-');
-      //       if (sd[sd.length - 1] === item.parent) {
-      //         let dd = sk + '-' + item.name;
-      //         console.log(dd);
-      //         linkRecurse(val, dd);
-      //       } else {
-      //         s.push(sk);
-      //       }
-      //     } else if (index <= ar.length -2 && item.name === ar[index + 1].parent) {
-      //       let str = item.name + '-' + ar[index + 1].name;
-      //       linkRecurse(val, str);
-      //     }
-      //   });
-      // };
-      // linkRecurse(arr);
-      // console.log(s);
-      //
-      //
-      //
-      //
-      // const link = (val) => {
-      //   val.forEach((item, index, ar) => {
-      //     if (index <= ar.length -2 && item.name === ar[index + 1].parent) {
-      //       s.push(item.name + '-' + ar[index + 1].name)
-      //     }
-      //   })
-      // };
-      // link(arr);
-      // console.log(s);
-      // const recurse = (val) => {
-      //   val.forEach((item, index, ar) => {
-      //     console.log(item, ar[index + 1]);
-      //     if (index <= ar.length -2 && item.split('-')[1] === ar[index + 1].split('-')[0]) {
-      //       k.push(item + '-' + ar[index + 1].split('-')[1]);
-      //     }
-      //   })
-      // };
-      // recurse(s);
-      // console.log(k);
-      // for (let i = 0;i<arr.length;i++) {
-      //   for (let j = 0;j<arr.length;j++) {
-      //     if (arr[i].name === arr[j].parent) {
-      //       s.push(arr[i].name + '-' +arr[j].name);
-      //     }
-      //   }
-      // }
-      // console.log(s);
-      // s.forEach((c) => {
-      //   s.forEach((d) => {
-      //     if (c.split('-')[1] === d.split('-')[0]) {
-      //       k.push(c + '-' + d.split('-')[1]);
-      //     }
-      //   })
-      // })
-      // console.log(k);
-      // let t = [...k];
-      // k.forEach((e, index) => {
-      //   k.forEach((f, ind) => {
-      //     if (e.split('-')[1] === f.split('-')[0] && e.split('-')[2] === f.split('-')[1]) {
-      //       t.splice(index, 1, e + '-' + f.split('-')[2]);
-      //       t.splice(ind, 1);
-      //     }
-      //   })
-      // })
-      // console.log(t);
+      const arrResult = test(arr);
+      console.log(arrResult);
     }
   </script>
 </body>
